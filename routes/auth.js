@@ -66,4 +66,29 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Endpoint para recuperación de contraseña
+router.post('/recover', async (req, res) => {
+    const { correo } = req.body;
+
+    if (!correo) {
+        return res.status(400).json({ msg: 'Correo es obligatorio' });
+    }
+
+    try {
+        const usuario = await Usuario.findOne({ correo });
+        if (!usuario) {
+            return res.status(404).json({ msg: 'Usuario no encontrado' });
+        }
+
+        // Generar token con expiración de 15 minutos
+        const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+
+        // Simular envío de correo
+        res.json({ msg: 'Se ha enviado un enlace de recuperación a su correo', token });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Error del servidor' });
+    }
+});
+
 module.exports = router;

@@ -1,3 +1,4 @@
+//File: server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');//permitir el acceso a las conexiones a este servidor
